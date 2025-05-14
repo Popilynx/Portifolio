@@ -43,7 +43,7 @@ function Hero() {
                 Entre em Contato
               </button>
               <a
-                href="#projects"
+                href="https://github.com/Popilynx"
                 className="border border-emerald-500 text-emerald-500 hover:bg-emerald-500 hover:text-white px-8 py-4 rounded-lg text-lg font-medium transition-colors duration-300"
               >
                 Ver Projetos
