@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import euImage from '../assets/eu.jpg';
 
 function Hero() {
   const [isVisible, setIsVisible] = useState(false);
@@ -75,7 +76,7 @@ function Hero() {
 
               <div className="relative w-80 h-[28rem] md:w-[26rem] md:h-[32rem]">
                 <img
-                  src="/eu.jpg"
+                  src={euImage}
                   alt="Renato Rocha"
                   className="w-full h-full object-cover rounded-[2rem] border border-white/10 transition-all duration-700 shadow-2xl saturate-[0.8] group-hover:saturate-[1.1]"
                 />
