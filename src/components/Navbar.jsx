@@ -34,13 +34,15 @@ function Navbar() {
   };
 
   return (
-    <nav className={`fixed top-0 w-full z-50 transition-all duration-300 ${scrolled ? 'bg-gray-900/95 shadow-lg' : 'bg-transparent'}`}>
+    <nav className={`fixed top-0 w-full z-50 transition-all duration-500 ${scrolled ? 'bg-[#0a0a0a]/80 backdrop-blur-xl border-b border-white/5 py-4' : 'bg-transparent py-6'}`}>
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex justify-between items-center h-20">
-          <div className="flex items-center">
-            <span className="text-2xl font-bold text-emerald-500">Renato.dev</span>
+        <div className="flex justify-between items-center">
+          <div className="flex items-center group cursor-pointer">
+            <span className="text-2xl font-bold tracking-tighter text-white group-hover:text-emerald-500 transition-colors duration-300">
+              Renato<span className="text-emerald-500 font-massive-serif line-through decoration-white/20">.</span>dev
+            </span>
           </div>
-          
+
           {/* Desktop Menu */}
           <div className="hidden md:block">
             <div className="flex items-center space-x-8">

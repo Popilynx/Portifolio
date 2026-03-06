@@ -2,6 +2,18 @@
 @tailwind components;
 @tailwind utilities;
 
+@layer base {
+  body {
+    font-family: 'Outfit', sans-serif;
+  }
+}
+
+.font-massive-serif {
+  font-family: 'Playfair Display', serif;
+  font-style: italic;
+  font-weight: 900;
+}
+
 ::-webkit-scrollbar {
   width: 5px;
   height: 5px;
@@ -14,12 +26,43 @@
 ::-webkit-scrollbar-thumb {
   border-radius: 25px;
   transition: all 0.3s;
-  background-color: rgba(106, 115, 125, 0.2);
+  @apply bg-emerald-500/20;
+
   &:hover {
-    background-color: rgba(106, 115, 125, 0.27);
+    @apply bg-emerald-500/40;
   }
 }
 
 ::-webkit-scrollbar-corner {
   display: none;
+}
+
+@keyframes ekg {
+  0% {
+    stroke-dashoffset: 1000;
+    opacity: 0;
+  }
+
+  20% {
+    opacity: 1;
+  }
+
+  80% {
+    opacity: 1;
+  }
+
+  100% {
+    stroke-dashoffset: 0;
+    opacity: 0;
+  }
+}
+
+.animate-ekg {
+  stroke-dasharray: 1000;
+  stroke-dashoffset: 1000;
+  animation: ekg 4s linear infinite;
+}
+
+::selection {
+  @apply bg-emerald-500 text-black;
 }

@@ -15,7 +15,7 @@ function App() {
   }, []);
 
   return (
-    <div className="bg-gray-900 text-white min-h-screen">
+    <div className="bg-[#0a0a0a] text-white min-h-screen selection:bg-emerald-500 selection:text-black">
       <div className={`transition-opacity duration-1000 ${isLoaded ? 'opacity-100' : 'opacity-0'}`}>
         <Navbar />
         <main>
