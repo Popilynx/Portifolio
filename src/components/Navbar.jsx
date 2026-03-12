@@ -9,6 +9,7 @@ function Navbar() {
     { id: "about", label: "Sobre" },
     { id: "skills", label: "Habilidades" },
     { id: "experience", label: "Experiência" },
+    { id: "projects", label: "Projetos" },
     { id: "contact", label: "Contato" },
   ];
 
