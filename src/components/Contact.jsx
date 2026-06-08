@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 
 function Contact() {
   const [isVisible, setIsVisible] = useState(false);
+  const [copied, setCopied] = useState(false);
   const [formData, setFormData] = useState({
     name: '',
     email: '',
@@ -13,6 +14,12 @@ function Contact() {
     success: false,
     message: ''
   });
+
+  const handleCopyEmail = () => {
+    navigator.clipboard.writeText('renatorochajr@gmail.com');
+    setCopied(true);
+    setTimeout(() => setCopied(false), 2000);
+  };
 
   useEffect(() => {
     const observer = new IntersectionObserver(
@@ -130,21 +137,43 @@ ${formData.message}`;
                   className={`bg-[#111] border border-white/5 p-8 rounded-2xl transition-all duration-500 transform ${isVisible ? 'translate-y-0 opacity-100' : 'translate-y-10 opacity-0'} hover:border-emerald-500/20`}
                   style={{ transitionDelay: `${index * 150}ms` }}
                 >
-                  <div className="flex items-center space-x-4">
-                    <div className="flex-shrink-0 bg-emerald-500/10 p-3 rounded-xl uppercase">
-                      {info.icon}
+                  <div className="flex items-center justify-between w-full">
+                    <div className="flex items-center space-x-4">
+                      <div className="flex-shrink-0 bg-emerald-500/10 p-3 rounded-xl uppercase">
+                        {info.icon}
+                      </div>
+                      <div>
+                        <h3 className="text-sm font-bold text-gray-500 tracking-widest uppercase mb-1">{info.title}</h3>
+                        <a
+                          href={info.link}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="text-lg text-white hover:text-emerald-500 transition-colors font-medium"
+                        >
+                          {info.value}
+                        </a>
+                      </div>
                     </div>
-                    <div>
-                      <h3 className="text-sm font-bold text-gray-500 tracking-widest uppercase mb-1">{info.title}</h3>
-                      <a
-                        href={info.link}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="text-lg text-white hover:text-emerald-500 transition-colors font-medium"
+                    {info.title === "Email" && (
+                      <button
+                        onClick={handleCopyEmail}
+                        className="p-2.5 hover:bg-white/5 rounded-xl text-gray-400 hover:text-emerald-500 transition-all active:scale-95 group/copy relative"
+                        title="Copiar e-mail"
                       >
-                        {info.value}
-                      </a>
-                    </div>
+                        {copied ? (
+                          <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-emerald-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                          </svg>
+                        ) : (
+                          <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-gray-400 group-hover/copy:text-emerald-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 5H6a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2v-1M8 5a2 2 0 002 2h2a2 2 0 002-2M8 5a2 2 0 012-2h2a2 2 0 012 2m0 0h2a2 2 0 012 2v3m2 4H10m0 0l3-3m-3 3l3 3" />
+                          </svg>
+                        )}
+                        <span className="absolute -top-10 left-1/2 transform -translate-x-1/2 bg-black border border-white/5 text-white text-xs px-2.5 py-1.5 rounded-xl opacity-0 group-hover/copy:opacity-100 transition-opacity pointer-events-none whitespace-nowrap shadow-xl z-20">
+                          {copied ? 'Copiado!' : 'Copiar E-mail'}
+                        </span>
+                      </button>
+                    )}
                   </div>
                 </div>
               ))}
