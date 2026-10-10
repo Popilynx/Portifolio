@@ -1,140 +1,161 @@
-import { useState, useEffect } from 'react';
+const EXPERIENCES = [
+  {
+    company: "Indústria de Equipamentos Médicos & Hospitalares",
+    companyCategory: "Grande Porte • Manufatura",
+    role: "Analista de Sistemas & Desenvolvedor Full Stack",
+    period: "Nov 2025 — Atual",
+    badge: "Sistemas & ERP Senior",
+    summary: "Engenharia de software, desenvolvimento full stack e sustentação de sistemas internos integrados ao ERP corporativo, atuando sob padrões de conformidade técnica e boas práticas industriais.",
+    highlights: [
+      "Desenvolvimento contínuo do ecossistema de sistemas internos: SCO (Compras & Alçadas), SLO (Logística & Almoxarifado) e SMO/SFO (Manufatura & Totens).",
+      "Arquitetura de integração via WebServices SOAP/XML com o ERP Senior Sistemas (Gestão Empresarial G5 / Sapiens) e regras de negócio em LSP.",
+      "Automação de processos industriais: conferência ótica de Ordens de Fabricação por código de barras, Kanban fabril e totens de apontamento.",
+      "Acompanhamento de processos de validação de sistemas computadorizados (protocolos IQ/OQ/PQ) para conformidade regulatória (BPF / ANVISA)."
+    ],
+    technologies: ["Java", "Vue.js", "ERP Senior Sistemas", "LSP", "SOAP/XML", "Oracle DB", "SQL Server"]
+  },
+  {
+    company: "Vindi",
+    companyCategory: "Fintech • Pagamentos & Cobrança Recorrente",
+    role: "Desenvolvedor Full Stack Júnior",
+    period: "Jan 2024 — Ago 2025",
+    badge: "Java & Vue.js",
+    summary: "Atuação no desenvolvimento de aplicações e rotinas para a plataforma de pagamentos da Vindi, com foco em estabilidade operacional e consistência de transações.",
+    highlights: [
+      "Construção e manutenção de interfaces reativas em Vue.js integradas a APIs REST.",
+      "Desenvolvimento de funcionalidades backend em Java voltadas para fluxos financeiros e conciliação.",
+      "Trabalho em times multidisciplinares com metodologias ágeis, Git e ambientes com Docker."
+    ],
+    technologies: ["Java", "Vue.js", "Docker", "Git", "APIs REST", "MySQL"]
+  },
+  {
+    company: "Credisfera",
+    companyCategory: "Serviços Financeiros & Crédito",
+    role: "Analista de Suporte Pleno / Desenvolvedor Júnior",
+    period: "Set 2022 — Fev 2024",
+    badge: "Core Banking & APIs",
+    summary: "Sustentação a serviços bancários internacionais, análise de requisições, resolução de incidentes e desenvolvimento de rotinas de suporte.",
+    highlights: [
+      "Atendimento técnico a parceiros de grande porte como Telefónica Global e Movistar (México e Colômbia).",
+      "Suporte à plataforma de core banking Mambu e APIs de esteira de crédito.",
+      "Monitoramento ativo de aplicações, serviços e rotinas com Datadog e AWS."
+    ],
+    technologies: ["Java Spring Boot", "MySQL", "Datadog", "AWS", "Postman", "BitBucket"]
+  },
+  {
+    company: "Porter Group & Clemar Engenharia",
+    companyCategory: "Infraestrutura & Tecnologia",
+    role: "Suporte Técnico & Infraestrutura de TI",
+    period: "2019 — 2022",
+    badge: "Redes & Sistemas",
+    summary: "Base operacional sólida em administração de servidores, infraestrutura de data centers, suporte a sistemas de portaria remota e Active Directory.",
+    highlights: [
+      "Resolução e triagem de incidentes em ambientes críticos com servidores Linux e Windows.",
+      "Gestão de usuários, políticas de rede e rotinas de cópia de segurança corporativa."
+    ],
+    technologies: ["Servidores Linux", "Windows Server", "Active Directory", "Redes"]
+  }
+];
 
 function Experience() {
-  const [isVisible, setIsVisible] = useState(false);
-
-  useEffect(() => {
-    const observer = new IntersectionObserver(
-      ([entry]) => {
-        if (entry.isIntersecting) {
-          setIsVisible(true);
-        }
-      },
-      { threshold: 0.1 }
-    );
-
-    const element = document.getElementById('experience');
-    if (element) {
-      observer.observe(element);
-    }
-
-    return () => {
-      if (element) {
-        observer.unobserve(element);
-      }
-    };
-  }, []);
-
-  const experiences = [
-    {
-      title: "Analista de Sistemas",
-      company: "Olsen SA",
-      period: "Novembro 2025 - Atual",
-      description: "Atuação como Analista de Sistemas, participando do desenvolvimento e suporte de sistemas internos, integrações e otimização de processos.",
-      technologies: ["SQL Server", "ERP", "Integrações", "Análise de Sistemas"]
-    },
-    {
-      title: "Desenvolvedor Full Stack Junior",
-      company: "Vindi",
-      period: "Janeiro 2024 - Agosto 2025",
-      description: "Desenvolvimento de aplicações web usando Java e Vue.js. Implementação de soluções completas para o sistema de pagamentos da Vindi.",
-      technologies: ["Java", "Vue.js", "Git", "Docker"]
-    },
-    {
-      title: "Desenvolvedor Júnior",
-      company: "Credisfera",
-      period: "Janeiro 2024 - Fevereiro 2024",
-      description: "Desenvolvimento de software utilizando Java e outras tecnologias para soluções financeiras.",
-      technologies: ["Java", "Software", "Git"]
-    },
-    {
-      title: "Analista de Suporte Pleno",
-      company: "Credisfera",
-      period: "Setembro 2022 - Fevereiro 2024",
-      description: "Atuação prestando suporte aos parceiros Telefónica Global, Movistar (Colombia e México), com atendimentos nível 1, 2 e 3. Suporte a plataforma financeira Mambu, plataforma de empréstimos desenvolvida pela Credisfera. Monitoramento ativo e passivo de aplicações, APIs e Healthchecks (Datadog).",
-      technologies: ["MySQL", "Postman", "JavaScript", "Java", "SpringBoot", "JIRA", "Git", "BitBucket", "AWS Services"]
-    },
-    {
-      title: "Assistente de Suporte",
-      company: "Porter Group",
-      period: "Agosto 2021 - Setembro 2022",
-      description: "Administração, redirecionamento e monitoramento de incidentes de suporte. Atendimento aos clientes via ticket, telefone ou chat. Análise de logs e reporte de incidentes. Controle de status de chamados técnicos e interação com usuários.",
-      technologies: ["Microsoft Windows", "Servidor Linux", "JIRA", "Movidesk"]
-    },
-    {
-      title: "Técnico de TI",
-      company: "Clemar Engenharia",
-      period: "Abril 2019 - Agosto 2021",
-      description: "Manutenção de computadores, gerenciamento de contas de usuário (Active Directory), instalações de software. Apoio no gerenciamento de BKP do data center, suporte técnico conforme a demanda dos usuários.",
-      technologies: ["Microsoft Windows", "Hardware de computador", "Active Directory"]
-    }
-  ];
-
   return (
-    <section id="experience" className="py-24 bg-[#0a0a0a]">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className={`transition-all duration-1000 transform ${isVisible ? 'translate-y-0 opacity-100' : 'translate-y-10 opacity-0'}`}>
-          <h2 className="text-5xl md:text-6xl font-bold text-center mb-4 tracking-tighter">
-            Trabalho <span className="text-emerald-500 font-massive-serif">&</span> Experiência
+    <section id="experience" className="py-24 bg-[#0A0A0F] relative overflow-hidden">
+      <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+        
+        {/* Section Header */}
+        <div className="max-w-3xl mb-16 space-y-3">
+          <div className="inline-flex items-center gap-2 px-3.5 py-1 rounded-full bg-white/[0.03] border border-white/10 text-gray-300 text-xs font-mono">
+            <span className="w-1.5 h-1.5 rounded-full bg-emerald-400"></span>
+            <span>Histórico Profissional</span>
+          </div>
+
+          <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold tracking-tight text-white">
+            Trajetória & <br />
+            <span className="font-massive-serif text-emerald-400 font-normal">Experiência Corporativa</span>
           </h2>
-          <p className="text-xl text-gray-500 text-center mb-20 font-light">Uma linha do tempo da minha evolução profissional</p>
 
-          <div className="relative">
-            {/* Timeline line */}
-            <div className="absolute left-0 md:left-1/2 transform md:-translate-x-1/2 h-full w-px bg-white/5"></div>
+          <p className="text-base text-gray-400 font-light leading-relaxed">
+            Vivência na sustentação e criação de sistemas para ambientes industriais, fintechs de grande volume e operações financeiras.
+          </p>
+        </div>
 
-            {/* Experience items */}
-            <div className="space-y-24">
-              {experiences.map((exp, index) => (
-                <div
-                  key={index}
-                  className={`relative transition-all duration-700 transform ${isVisible ? 'translate-y-0 opacity-100' : 'translate-y-10 opacity-0'}`}
-                  style={{ transitionDelay: `${index * 150}ms` }}
-                >
-                  {/* Timeline dot */}
-                  <div className="absolute left-0 md:left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-3 h-3 rounded-full bg-emerald-500 shadow-[0_0_15px_rgba(16,185,129,0.5)] z-10"></div>
+        {/* Timeline */}
+        <div className="relative border-l border-white/10 ml-3 md:ml-6 space-y-10">
+          {EXPERIENCES.map((exp, index) => (
+            <div key={index} className="relative pl-6 md:pl-8 group">
+              
+              {/* Bullet Node */}
+              <div className="absolute -left-[5px] top-6 w-2.5 h-2.5 rounded-full bg-emerald-400 border border-[#0A0A0F]"></div>
 
-                  <div className={`relative md:w-1/2 ${index % 2 === 0 ? 'md:ml-auto md:pl-20' : 'md:mr-auto md:pr-20 md:text-right'} pl-10`}>
-                    <div className="group bg-[#111] border border-white/5 p-10 rounded-[2rem] hover:border-emerald-500/30 transition-all duration-500 hover:scale-[1.02]">
-                      <div className={`flex items-center gap-3 mb-6 ${index % 2 === 0 ? '' : 'md:justify-end'}`}>
-                        <span className="px-4 py-1.5 text-xs font-bold tracking-widest uppercase bg-white/5 text-gray-400 rounded-full border border-white/5 group-hover:bg-emerald-500 group-hover:text-black transition-colors duration-500">
-                          {exp.period}
-                        </span>
-                      </div>
-
-                      <h3 className="text-3xl font-bold text-white mb-2 tracking-tight group-hover:text-emerald-500 transition-colors">{exp.title}</h3>
-                      <h4 className="text-lg text-emerald-500/80 font-medium mb-6">{exp.company}</h4>
-
-                      <p className="text-lg text-gray-400 font-light leading-relaxed mb-8">{exp.description}</p>
-
-                      <div className={`flex flex-wrap gap-2 ${index % 2 === 0 ? '' : 'md:justify-end'}`}>
-                        {exp.technologies.map((tech, techIndex) => (
-                          <span
-                            key={techIndex}
-                            className="text-xs font-bold text-gray-500 bg-white/5 px-4 py-2 rounded-lg border border-white/5 group-hover:border-emerald-500/10"
-                          >
-                            {tech}
-                          </span>
-                        ))}
-                      </div>
+              {/* Card */}
+              <div className="rounded-2xl bg-[#12121D]/70 border border-white/10 p-6 sm:p-7 hover:border-emerald-500/30 transition-all duration-200">
+                
+                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-3">
+                  <div>
+                    <div className="flex flex-wrap items-center gap-2.5">
+                      <h3 className="text-xl font-bold text-white tracking-tight">
+                        {exp.company}
+                      </h3>
+                      <span className="text-[11px] font-mono text-gray-400">
+                        ({exp.companyCategory})
+                      </span>
+                    </div>
+                    <div className="text-sm text-emerald-400 font-medium mt-0.5">
+                      {exp.role}
                     </div>
                   </div>
-                </div>
-              ))}
-            </div>
-          </div>
 
-          <div className="mt-24 text-center">
-            <a
-              href="https://www.linkedin.com/in/renato-rocha-de-souza-júnior-775b48149/"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="px-12 py-5 text-lg bg-white/5 border border-white/10 text-white font-bold rounded-full hover:bg-emerald-500 hover:text-black hover:border-emerald-500 transition-all duration-500 shadow-xl"
-            >
-              Ver Currículo Completo
-            </a>
-          </div>
+                  <div className="text-xs font-mono text-gray-400 px-3 py-1 rounded-full bg-white/[0.02] border border-white/5 self-start sm:self-auto">
+                    {exp.period}
+                  </div>
+                </div>
+
+                <p className="text-sm text-gray-300 font-light leading-relaxed mb-4">
+                  {exp.summary}
+                </p>
+
+                {/* Highlights */}
+                <div className="space-y-1.5 mb-5">
+                  {exp.highlights.map((item, hIdx) => (
+                    <div key={hIdx} className="flex items-start gap-2 text-xs sm:text-sm text-gray-400 font-light leading-relaxed">
+                      <span className="text-emerald-400 font-bold mt-0.5">•</span>
+                      <span>{item}</span>
+                    </div>
+                  ))}
+                </div>
+
+                {/* Techs */}
+                <div className="flex flex-wrap gap-1.5 pt-3 border-t border-white/5">
+                  {exp.technologies.map((tech, tIdx) => (
+                    <span
+                      key={tIdx}
+                      className="text-[10px] font-mono px-2 py-0.5 rounded bg-black/40 border border-white/5 text-gray-300"
+                    >
+                      {tech}
+                    </span>
+                  ))}
+                </div>
+
+              </div>
+            </div>
+          ))}
         </div>
+
+        {/* LinkedIn Link */}
+        <div className="mt-12 text-center">
+          <a
+            href="https://www.linkedin.com/in/renato-rocha-de-souza-júnior-775b48149/"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full bg-white/[0.03] hover:bg-white/[0.08] border border-white/10 text-xs font-mono text-gray-300 hover:text-white uppercase tracking-wider transition-all"
+          >
+            <span>Ver perfil detalhado no LinkedIn</span>
+            <svg className="w-3.5 h-3.5 text-emerald-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14 5l7 7m0 0l-7 7m7-7H3" />
+            </svg>
+          </a>
+        </div>
+
       </div>
     </section>
   );

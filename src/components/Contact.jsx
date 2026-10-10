@@ -1,293 +1,234 @@
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 
 function Contact() {
-  const [isVisible, setIsVisible] = useState(false);
   const [copied, setCopied] = useState(false);
   const [formData, setFormData] = useState({
     name: '',
     email: '',
-    subject: '',
+    projectType: 'Projeto Web ou MVP',
     message: ''
   });
-  const [formStatus, setFormStatus] = useState({
-    submitted: false,
-    success: false,
-    message: ''
-  });
+  const [submitted, setSubmitted] = useState(false);
 
   const handleCopyEmail = () => {
     navigator.clipboard.writeText('renatorochajr@gmail.com');
     setCopied(true);
-    setTimeout(() => setCopied(false), 2000);
+    setTimeout(() => setCopied(false), 2500);
   };
-
-  useEffect(() => {
-    const observer = new IntersectionObserver(
-      ([entry]) => {
-        if (entry.isIntersecting) {
-          setIsVisible(true);
-        }
-      },
-      { threshold: 0.1 }
-    );
-
-    const element = document.getElementById('contact');
-    if (element) {
-      observer.observe(element);
-    }
-
-    return () => {
-      if (element) {
-        observer.unobserve(element);
-      }
-    };
-  }, []);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setFormData(prev => ({ ...prev, [name]: value }));
+    setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
   const handleSubmit = (e) => {
     e.preventDefault();
 
     const phoneNumber = "5548984544096";
-    const message = `Olá Renato, meu nome é ${formData.name}.
-*Assunto:* ${formData.subject}
-*Email:* ${formData.email}
+    const text = `Olá Renato, meu nome é ${formData.name}.
+Assunto / Tipo: ${formData.projectType}
+Email de contato: ${formData.email}
 
-*Mensagem:*
+Mensagem:
 ${formData.message}`;
 
-    const encodedMessage = encodeURIComponent(message);
-    const whatsappUrl = `https://wa.me/${phoneNumber}?text=${encodedMessage}`;
+    const encoded = encodeURIComponent(text);
+    const whatsappUrl = `https://wa.me/${phoneNumber}?text=${encoded}`;
 
     window.open(whatsappUrl, '_blank');
-
-    setFormStatus({
-      submitted: true,
-      success: true,
-      message: 'Redirecionando para o WhatsApp...'
-    });
-
-    setFormData({
-      name: '',
-      email: '',
-      subject: '',
-      message: ''
-    });
+    setSubmitted(true);
 
     setTimeout(() => {
-      setFormStatus({
-        submitted: false,
-        success: false,
+      setSubmitted(false);
+      setFormData({
+        name: '',
+        email: '',
+        projectType: 'Projeto Web ou MVP',
         message: ''
       });
-    }, 5000);
+    }, 4000);
   };
 
-  const contactInfo = [
-    {
-      icon: (
-        <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6 text-emerald-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
-        </svg>
-      ),
-      title: "Email",
-      value: "renatorochajr@gmail.com",
-      link: "mailto:renatorochajr@gmail.com"
-    },
-    {
-      icon: (
-        <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6 text-emerald-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 11c0 3.517-1.009 6.799-2.753 9.571m-3.44-2.04l.054-.09A13.916 13.916 0 008 11a4 4 0 118 0c0 1.017-.07 2.019-.203 3m-2.118 6.844A21.88 21.88 0 0015.171 17m3.839 1.132c.645-2.266.99-4.659.99-7.132A8 8 0 008 4.07M3 15.364c.64-1.319 1-2.8 1-4.364 0-1.457.39-2.823 1.07-4" />
-        </svg>
-      ),
-      title: "LinkedIn",
-      value: "Renato Rocha de Souza Júnior",
-      link: "https://www.linkedin.com/in/renato-rocha-de-souza-júnior-775b48149/"
-    },
-    {
-      icon: (
-        <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6 text-emerald-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4" />
-        </svg>
-      ),
-      title: "GitHub",
-      value: "@Popilynx",
-      link: "https://github.com/Popilynx?tab=repositories"
-    }
-  ];
-
   return (
-    <section id="contact" className="py-20 bg-[#0a0a0a]">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className={`transition-all duration-1000 transform ${isVisible ? 'translate-y-0 opacity-100' : 'translate-y-10 opacity-0'}`}>
-          <h2 className="text-5xl md:text-6xl font-bold text-center mb-4 tracking-tighter">
-            Entre em <span className="text-emerald-500 font-massive-serif">Contato</span>
+    <section id="contact" className="py-24 bg-[#0A0A0F] relative overflow-hidden">
+      <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+        
+        {/* Section Header */}
+        <div className="max-w-3xl mb-16 space-y-3">
+          <div className="inline-flex items-center gap-2 px-3.5 py-1 rounded-full bg-white/[0.03] border border-white/10 text-gray-300 text-xs font-mono">
+            <span className="w-1.5 h-1.5 rounded-full bg-emerald-400"></span>
+            <span>Comunicação Direta</span>
+          </div>
+
+          <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold tracking-tight text-white">
+            Entre em <span className="font-massive-serif text-emerald-400 font-normal">Contato</span>
           </h2>
-          <p className="text-xl text-gray-500 text-center mb-16 font-light">Sinta-se à vontade para entrar em contato para qualquer projeto ou colaboração</p>
 
-          <div className="grid md:grid-cols-3 gap-8">
-            {/* Contact Info */}
-            <div className="md:col-span-1 space-y-6">
-              {contactInfo.map((info, index) => (
-                <div
-                  key={index}
-                  className={`bg-[#111] border border-white/5 p-8 rounded-2xl transition-all duration-500 transform ${isVisible ? 'translate-y-0 opacity-100' : 'translate-y-10 opacity-0'} hover:border-emerald-500/20`}
-                  style={{ transitionDelay: `${index * 150}ms` }}
+          <p className="text-base text-gray-400 font-light leading-relaxed">
+            Disponível para novos projetos, desenvolvimento sob demanda e conversas técnicas.
+          </p>
+        </div>
+
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+          
+          {/* Left Column: Direct Contacts */}
+          <div className="lg:col-span-5 space-y-4">
+            
+            {/* Email Card */}
+            <div className="p-5 rounded-2xl bg-[#12121D]/70 border border-white/10 flex items-center justify-between group hover:border-emerald-500/30 transition-all">
+              <div className="space-y-0.5">
+                <span className="text-[11px] font-mono text-gray-400 uppercase tracking-wider block">E-mail</span>
+                <a
+                  href="mailto:renatorochajr@gmail.com"
+                  className="text-sm font-semibold text-white group-hover:text-emerald-400 transition-colors"
                 >
-                  <div className="flex items-center justify-between w-full">
-                    <div className="flex items-center space-x-4">
-                      <div className="flex-shrink-0 bg-emerald-500/10 p-3 rounded-xl uppercase">
-                        {info.icon}
-                      </div>
-                      <div>
-                        <h3 className="text-sm font-bold text-gray-500 tracking-widest uppercase mb-1">{info.title}</h3>
-                        <a
-                          href={info.link}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className="text-lg text-white hover:text-emerald-500 transition-colors font-medium"
-                        >
-                          {info.value}
-                        </a>
-                      </div>
-                    </div>
-                    {info.title === "Email" && (
-                      <button
-                        onClick={handleCopyEmail}
-                        className="p-2.5 hover:bg-white/5 rounded-xl text-gray-400 hover:text-emerald-500 transition-all active:scale-95 group/copy relative"
-                        title="Copiar e-mail"
-                      >
-                        {copied ? (
-                          <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-emerald-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
-                          </svg>
-                        ) : (
-                          <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-gray-400 group-hover/copy:text-emerald-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 5H6a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2v-1M8 5a2 2 0 002 2h2a2 2 0 002-2M8 5a2 2 0 012-2h2a2 2 0 012 2m0 0h2a2 2 0 012 2v3m2 4H10m0 0l3-3m-3 3l3 3" />
-                          </svg>
-                        )}
-                        <span className="absolute -top-10 left-1/2 transform -translate-x-1/2 bg-black border border-white/5 text-white text-xs px-2.5 py-1.5 rounded-xl opacity-0 group-hover/copy:opacity-100 transition-opacity pointer-events-none whitespace-nowrap shadow-xl z-20">
-                          {copied ? 'Copiado!' : 'Copiar E-mail'}
-                        </span>
-                      </button>
-                    )}
-                  </div>
-                </div>
-              ))}
-
-              <div className={`bg-[#111] border border-white/5 p-8 rounded-2xl transition-all duration-500 transform ${isVisible ? 'translate-y-0 opacity-100' : 'translate-y-10 opacity-0'}`} style={{ transitionDelay: '450ms' }}>
-                <h3 className="text-sm font-bold text-gray-500 tracking-widest uppercase mb-6">Me Siga</h3>
-                <div className="flex space-x-4">
-                  <a
-                    href="https://github.com/Popilynx?tab=repositories"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="bg-white/5 hover:bg-emerald-500 h-14 w-14 rounded-full flex items-center justify-center transition-all group"
-                  >
-                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" className="text-gray-400 group-hover:text-black transition-colors" viewBox="0 0 16 16">
-                      <path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.012 8.012 0 0 0 16 8c0-4.42-3.58-8-8-8z" />
-                    </svg>
-                  </a>
-                  <a
-                    href="https://www.linkedin.com/in/renato-rocha-de-souza-júnior-775b48149/"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="bg-white/5 hover:bg-emerald-500 h-14 w-14 rounded-full flex items-center justify-center transition-all group"
-                  >
-                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" className="text-gray-400 group-hover:text-black transition-colors" viewBox="0 0 16 16">
-                      <path d="M0 1.146C0 .513.526 0 1.175 0h13.65C15.474 0 16 .513 16 1.146v13.708c0 .633-.526 1.146-1.175 1.146H1.175C.526 16 0 15.487 0 14.854V1.146zm4.943 12.248V6.169H2.542v7.225h2.401zm-1.2-8.212c.837 0 1.358-.554 1.358-1.248-.015-.709-.52-1.248-1.342-1.248-.822 0-1.359.54-1.359 1.248 0 .694.521 1.248 1.327 1.248h.016zm4.908 8.212V9.359c0-.216.016-.432.08-.586.173-.431.568-.878 1.232-.878.869 0 1.216.662 1.216 1.634v3.865h2.401V9.25c0-2.22-1.184-3.252-2.764-3.252-1.274 0-1.845.7-2.165 1.193v.025h-.016a5.54 5.54 0 0 1 .016-.025V6.169h-2.4c.03.678 0 7.225 0 7.225h2.4z" />
-                    </svg>
-                  </a>
-                </div>
+                  renatorochajr@gmail.com
+                </a>
               </div>
+              <button
+                onClick={handleCopyEmail}
+                className="py-1.5 px-3 rounded-lg bg-white/5 hover:bg-emerald-500 hover:text-black border border-white/5 text-gray-300 transition-all text-xs font-mono flex items-center gap-1.5"
+                title="Copiar e-mail"
+              >
+                {copied ? (
+                  <span className="text-emerald-400 font-medium">Copiado</span>
+                ) : (
+                  <span>Copiar</span>
+                )}
+              </button>
             </div>
 
-            {/* Contact Form */}
-            <div className="md:col-span-2">
-              <div className={`bg-[#111] border border-white/5 rounded-3xl p-8 md:p-12 transition-all duration-700 transform ${isVisible ? 'translate-y-0 opacity-100' : 'translate-y-10 opacity-0'}`}>
-                {formStatus.submitted ? (
-                  <div className={`p-8 rounded-2xl flex flex-col items-center justify-center text-center space-y-4 ${formStatus.success ? 'bg-emerald-500/10 text-emerald-400' : 'bg-red-500/10 text-red-400'}`}>
-                    <div className="w-16 h-16 rounded-full bg-emerald-500/20 flex items-center justify-center mb-2">
-                      <svg xmlns="http://www.w3.org/2000/svg" className="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
-                      </svg>
-                    </div>
-                    <p className="text-2xl font-bold text-white">Mensagem Preparada!</p>
-                    <p className="text-lg opacity-80">{formStatus.message}</p>
-                  </div>
-                ) : (
-                  <form onSubmit={handleSubmit}>
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
-                      <div className="space-y-2">
-                        <label htmlFor="name" className="text-sm font-bold text-gray-500 tracking-widest uppercase ml-1">Seu Nome</label>
-                        <input
-                          type="text"
-                          id="name"
-                          name="name"
-                          placeholder="Ex: João Silva"
-                          value={formData.name}
-                          onChange={handleChange}
-                          className="w-full px-6 py-4 bg-white/5 border border-white/5 rounded-2xl focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-transparent text-white placeholder:text-gray-600 transition-all font-medium"
-                          required
-                        />
-                      </div>
-                      <div className="space-y-2">
-                        <label htmlFor="email" className="text-sm font-bold text-gray-500 tracking-widest uppercase ml-1">Seu E-mail</label>
-                        <input
-                          type="email"
-                          id="email"
-                          name="email"
-                          placeholder="Ex: joao@email.com"
-                          value={formData.email}
-                          onChange={handleChange}
-                          className="w-full px-6 py-4 bg-white/5 border border-white/5 rounded-2xl focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-transparent text-white placeholder:text-gray-600 transition-all font-medium"
-                          required
-                        />
-                      </div>
-                    </div>
-                    <div className="mb-6 space-y-2">
-                      <label htmlFor="subject" className="text-sm font-bold text-gray-500 tracking-widest uppercase ml-1">Assunto</label>
+            {/* WhatsApp Card */}
+            <a
+              href="https://wa.me/5548984544096"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="p-5 rounded-2xl bg-[#12121D]/70 border border-white/10 flex items-center justify-between group hover:border-emerald-500/30 transition-all block"
+            >
+              <div className="space-y-0.5">
+                <span className="text-[11px] font-mono text-gray-400 uppercase tracking-wider block">WhatsApp</span>
+                <span className="text-sm font-semibold text-white group-hover:text-emerald-400 transition-colors">
+                  +55 (48) 98454-4096
+                </span>
+              </div>
+              <div className="p-2 rounded-lg bg-emerald-500/10 text-emerald-400 group-hover:bg-emerald-500 group-hover:text-black transition-colors text-xs font-mono">
+                Conversar
+              </div>
+            </a>
+
+            {/* Social Links */}
+            <div className="grid grid-cols-2 gap-3 pt-1">
+              <a
+                href="https://www.linkedin.com/in/renato-rocha-de-souza-júnior-775b48149/"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="p-4 rounded-xl bg-[#12121D]/70 border border-white/10 hover:border-emerald-500/30 transition-all text-white flex items-center justify-between text-xs font-mono"
+              >
+                <span>LinkedIn</span>
+                <span className="text-emerald-400">↗</span>
+              </a>
+
+              <a
+                href="https://github.com/Popilynx"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="p-4 rounded-xl bg-[#12121D]/70 border border-white/10 hover:border-emerald-500/30 transition-all text-white flex items-center justify-between text-xs font-mono"
+              >
+                <span>GitHub</span>
+                <span className="text-emerald-400">↗</span>
+              </a>
+            </div>
+
+          </div>
+
+          {/* Right Column: Form */}
+          <div className="lg:col-span-7">
+            <div className="rounded-2xl bg-[#12121D]/70 border border-white/10 p-6 sm:p-7 shadow-xl">
+              
+              <h3 className="text-lg font-bold text-white mb-1">
+                Enviar Mensagem
+              </h3>
+              <p className="text-xs text-gray-400 font-light mb-5">
+                Preencha os campos para iniciar a conversa diretamente no WhatsApp.
+              </p>
+
+              {submitted ? (
+                <div className="p-6 rounded-xl bg-emerald-500/10 border border-emerald-500/20 text-center space-y-1">
+                  <h4 className="text-sm font-bold text-white">Redirecionando para o WhatsApp...</h4>
+                  <p className="text-xs text-gray-400 font-light">Sua mensagem foi estruturada.</p>
+                </div>
+              ) : (
+                <form onSubmit={handleSubmit} className="space-y-4">
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    <div className="space-y-1">
+                      <label className="text-[11px] font-mono text-gray-400 uppercase tracking-wider">Nome</label>
                       <input
                         type="text"
-                        id="subject"
-                        name="subject"
-                        placeholder="Em que posso ajudar?"
-                        value={formData.subject}
-                        onChange={handleChange}
-                        className="w-full px-6 py-4 bg-white/5 border border-white/5 rounded-2xl focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-transparent text-white placeholder:text-gray-600 transition-all font-medium"
+                        name="name"
                         required
+                        placeholder="Seu nome"
+                        value={formData.name}
+                        onChange={handleChange}
+                        className="w-full px-3.5 py-2.5 rounded-xl bg-white/[0.02] border border-white/10 text-white placeholder-gray-600 text-xs focus:outline-none focus:border-emerald-500 transition-colors font-sans"
                       />
                     </div>
-                    <div className="mb-8 space-y-2">
-                      <label htmlFor="message" className="text-sm font-bold text-gray-500 tracking-widest uppercase ml-1">Sua Mensagem</label>
-                      <textarea
-                        id="message"
-                        name="message"
-                        placeholder="Escreva seu projeto ou dúvida aqui..."
-                        value={formData.message}
-                        onChange={handleChange}
-                        rows={5}
-                        className="w-full px-6 py-4 bg-white/5 border border-white/5 rounded-2xl focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-transparent text-white placeholder:text-gray-600 transition-all font-medium resize-none text-lg"
+                    <div className="space-y-1">
+                      <label className="text-[11px] font-mono text-gray-400 uppercase tracking-wider">E-mail</label>
+                      <input
+                        type="email"
+                        name="email"
                         required
-                      ></textarea>
+                        placeholder="seu@email.com"
+                        value={formData.email}
+                        onChange={handleChange}
+                        className="w-full px-3.5 py-2.5 rounded-xl bg-white/[0.02] border border-white/10 text-white placeholder-gray-600 text-xs focus:outline-none focus:border-emerald-500 transition-colors font-sans"
+                      />
                     </div>
-                    <div>
-                      <button
-                        type="submit"
-                        className="w-full px-8 py-5 text-lg bg-emerald-500 hover:bg-emerald-600 text-black font-bold rounded-full transition-all duration-300 hover:scale-[1.02] active:scale-[0.98] shadow-[0_0_30px_rgba(16,185,129,0.2)]"
-                      >
-                        Enviar via WhatsApp
-                      </button>
-                    </div>
-                  </form>
-                )}
-              </div>
+                  </div>
+
+                  <div className="space-y-1">
+                    <label className="text-[11px] font-mono text-gray-400 uppercase tracking-wider">Assunto</label>
+                    <select
+                      name="projectType"
+                      value={formData.projectType}
+                      onChange={handleChange}
+                      className="w-full px-3.5 py-2.5 rounded-xl bg-[#0D0D15] border border-white/10 text-white text-xs focus:outline-none focus:border-emerald-500 transition-colors font-sans"
+                    >
+                      <option value="Projeto Web ou MVP">Projeto Web ou MVP</option>
+                      <option value="Integração de Sistemas ou ERP">Integração de Sistemas ou ERP</option>
+                      <option value="Website Comercial">Website Comercial</option>
+                      <option value="Consultoria ou Oportunidade">Consultoria ou Oportunidade</option>
+                      <option value="Outro assunto">Outro assunto</option>
+                    </select>
+                  </div>
+
+                  <div className="space-y-1">
+                    <label className="text-[11px] font-mono text-gray-400 uppercase tracking-wider">Mensagem</label>
+                    <textarea
+                      name="message"
+                      rows={3}
+                      required
+                      placeholder="Descreva seu projeto, objetivo ou dúvida..."
+                      value={formData.message}
+                      onChange={handleChange}
+                      className="w-full px-3.5 py-2.5 rounded-xl bg-white/[0.02] border border-white/10 text-white placeholder-gray-600 text-xs focus:outline-none focus:border-emerald-500 transition-colors font-sans resize-none"
+                    ></textarea>
+                  </div>
+
+                  <button
+                    type="submit"
+                    className="w-full py-3 rounded-xl bg-emerald-500 hover:bg-emerald-400 text-black font-semibold text-xs uppercase tracking-wider transition-colors"
+                  >
+                    Conversar via WhatsApp
+                  </button>
+                </form>
+              )}
+
             </div>
           </div>
+
         </div>
+
       </div>
     </section>
   );

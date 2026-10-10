@@ -1,5 +1,102 @@
 import { useState, useEffect } from 'react';
 
+// 1. SISTEMAS CORPORATIVOS & ERP (CONHECIMENTOS DO COFRE - SEM EXPOR A EMPRESA)
+const ENTERPRISE_SYSTEMS = [
+  {
+    id: 'sco',
+    code: 'SCO',
+    title: 'Sistema de Compras & Operações',
+    category: 'Enterprise • Integração ERP',
+    badge: 'Senior G5 / SOAP',
+    summary: 'Plataforma para gestão do ciclo de compras corporativo, integrando solicitações de compra e serviços diretamente ao ERP Senior Sistemas.',
+    highlights: [
+      'Ciclo completo de Solicitação de Compra (SC) e Solicitação de Serviço (SS).',
+      'Mecanismo de alçadas multinível de aprovação com validação hierárquica por limites de valor.',
+      'Comunicação bidirecional via WebServices SOAP/XML com rotinas nativas do ERP Senior Sistemas.',
+      'Interface web para requerentes e painel administrativo para compradores.'
+    ],
+    techStack: ['Java', 'Spring Boot', 'Vue.js', 'ERP Senior (Sapiens)', 'SOAP/XML', 'Oracle DB'],
+    statusLabel: 'Em Produção'
+  },
+  {
+    id: 'slo',
+    code: 'SLO',
+    title: 'Sistema de Logística & Almoxarifado',
+    category: 'Logística Industrial • Estoque',
+    badge: 'Kanban & Código de Barras',
+    summary: 'Gestão completa de movimentações físicas e digitais de estoque, automação de almoxarifados e monitoramento da linha fabril.',
+    highlights: [
+      'Kanban de reposição em tempo real para alimentação das linhas de montagem.',
+      'Conferência física e conferência ótica de Ordens de Fabricação via leitor de código de barras.',
+      'Módulo de Inventário Cíclico com classificação por Curva ABC de criticidade e giro.',
+      'Inspeção de controle de qualidade e registro de RNC (Relatório de Não Conformidade).',
+      'Sincronização de depósitos e saldo de materiais com o ERP Senior Sistemas.'
+    ],
+    techStack: ['Java', 'Vue.js', 'ERP Senior Sistemas', 'Oracle DB', 'SQL Server', 'APIs REST'],
+    statusLabel: 'Em Produção'
+  },
+  {
+    id: 'smo',
+    code: 'SMO / SFO',
+    title: 'Sistema de Manufatura & Chão de Fábrica',
+    category: 'Indústria • Totens & PCP',
+    badge: 'Chão de Fábrica & Rastreabilidade',
+    summary: 'Controle de processos fabris, roteiros de produção e apontamento industrial em totens touchscreen com rastreabilidade.',
+    highlights: [
+      'Sequenciamento de Ordens de Produção (OP) por centros de trabalho e estágios de roteiro.',
+      'Interface para totens industriais touchscreen para apontamento de produção e separação por operadores.',
+      'Painel de controle de PCP para acompanhamento da fila fabril em tempo real.',
+      'Arquitetura em conformidade com critérios formais de validação de sistemas computadorizados (BPF).'
+    ],
+    techStack: ['Java', 'Vue.js', 'Python (FastAPI)', 'ERP Senior Sistemas', 'LSP', 'Oracle'],
+    statusLabel: 'Em Produção'
+  }
+];
+
+// 2. PROJETOS PESSOAIS & FREELANCE
+const PERSONAL_PROJECTS = [
+  {
+    id: 'sistemaLevelUp',
+    title: 'Sistema Level Up',
+    category: 'Web App & Produtividade',
+    badge: 'Projeto Pessoal',
+    description: 'Aplicação web gamificada para acompanhamento de metas, hábitos diários e produtividade pessoal. Dashboard interativo com estatísticas de progresso.',
+    techStack: ['React', 'Tailwind CSS', 'Vercel', 'JavaScript'],
+    demoUrl: 'https://sistema-level-up.vercel.app/',
+    githubUrl: 'https://github.com/Popilynx/sistemaLevelUp'
+  },
+  {
+    id: 'assistenteSolarIA',
+    title: 'HelionIA — Assistente Solar',
+    category: 'Inteligência Artificial',
+    badge: 'IA & Automação',
+    description: 'Solução orientada ao mercado de energia solar fotovoltaica. Agente de IA para suporte no cálculo de dimensionamento e esclarecimento de regras técnicas.',
+    techStack: ['IA / LLMs', 'React', 'Node.js', 'APIs REST'],
+    demoUrl: 'https://helionia.app',
+    githubUrl: 'https://github.com/Popilynx/assistenteSolarIA'
+  },
+  {
+    id: 'portifolioRamon',
+    title: 'Ramon Soldas Industriais',
+    category: 'Website Comercial',
+    badge: 'Produção / Cliente',
+    description: 'Website comercial responsivo desenvolvido para empresa de soldagem e caldeiraria técnica, com foco em velocidade, SEO local e conversão direta via WhatsApp.',
+    techStack: ['React', 'Tailwind CSS', 'Vercel', 'UX/UI'],
+    demoUrl: 'https://ramon-soldas.vercel.app/',
+    githubUrl: 'https://github.com/Popilynx/portifolio-Ramon'
+  },
+  {
+    id: 'homemloboNode',
+    title: 'Homem Lobo & Evoluwoman',
+    category: 'Plataformas Web',
+    badge: 'Produção / Cliente',
+    description: 'Plataformas web voltadas para presença institucional, publicação de conteúdo e posicionamento de marca, estruturadas com foco em tempo de resposta e design responsivo.',
+    techStack: ['Node.js', 'JavaScript', 'Tailwind', 'Deploy Cloud'],
+    demoUrl: 'https://homemlobo.com',
+    githubUrl: 'https://github.com/Popilynx'
+  }
+];
+
 const DEPLOY_LINKS = {
   'homemloboNode': 'https://homemlobo.com',
   'evoluwoman': 'https://evoluwoman.com',
@@ -12,329 +109,348 @@ const DEPLOY_LINKS = {
 };
 
 function Projects() {
+  const [activeTab, setActiveTab] = useState('personal'); // 'personal' | 'enterprise'
   const [repos, setRepos] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
-  const [isVisible, setIsVisible] = useState(false);
+  const [loadingRepos, setLoadingRepos] = useState(true);
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedLanguage, setSelectedLanguage] = useState('Todos');
 
-  const FEATURED_NAMES = ['sistemaLevelUp', 'assistenteSolarIA', 'portifolio-Ramon', 'portifolio Ramon', 'portifolioRamon'];
-
-  const fetchReadmeSnippet = async (repoName) => {
-    try {
-      const response = await fetch(`https://api.github.com/repos/Popilynx/${repoName}/readme`, {
-        headers: { Accept: 'application/vnd.github.v3.raw' }
-      });
-      if (!response.ok) return null;
-      const text = await response.text();
-      // Limpa markdown básico e pega o primeiro parágrafo significativo
-      const cleanText = text
-        .replace(/#.*$/gm, '') // Remove headers
-        .replace(/!\[.*\]\(.*\)/g, '') // Remove imagens
-        .replace(/\[.*\]\(.*\)/g, '') // Remove links
-        .replace(/\n+/g, ' ') // Converte quebras de linha em espaços
-        .trim();
-      
-      return cleanText.substring(0, 160) + (cleanText.length > 160 ? '...' : '');
-    } catch {
-      return null;
-    }
-  };
-
   useEffect(() => {
-    const fetchAllData = async () => {
+    const fetchRepos = async () => {
       try {
         const response = await fetch('https://api.github.com/users/Popilynx/repos?sort=updated&per_page=30');
-        if (!response.ok) throw new Error('Falha ao buscar repositórios');
-        const reposData = await response.json();
+        if (!response.ok) throw new Error('Falha ao carregar');
+        const data = await response.json();
+        
+        const formatted = data.map(repo => ({
+          ...repo,
+          customDeploy: DEPLOY_LINKS[repo.name] || repo.homepage,
+          cleanDesc: repo.description || 'Repositório com código-fonte e documentação técnica.'
+        }));
 
-        // Busca os snippets dos READMEs em paralelo
-        const reposWithSnippets = await Promise.all(
-          reposData.map(async (repo) => {
-            const snippet = await fetchReadmeSnippet(repo.name);
-            return { 
-              ...repo, 
-              explanation: snippet || repo.description || 'Nenhuma descrição disponível.'
-            };
-          })
-        );
-
-        setRepos(reposWithSnippets);
+        setRepos(formatted);
       } catch (err) {
-        setError(err.message);
+        console.warn('GitHub API:', err);
       } finally {
-        setLoading(false);
+        setLoadingRepos(false);
       }
     };
 
-    fetchAllData();
-
-    const observer = new IntersectionObserver(
-      ([entry]) => {
-        if (entry.isIntersecting) {
-          setIsVisible(true);
-        }
-      },
-      { threshold: 0.1 }
-    );
-
-    const element = document.getElementById('projects');
-    if (element) observer.observe(element);
-
-    return () => {
-      if (element) observer.unobserve(element);
-    };
+    fetchRepos();
   }, []);
 
-  const featuredRepos = repos.filter(repo => FEATURED_NAMES.includes(repo.name));
-  const otherRepos = repos.filter(repo => !FEATURED_NAMES.includes(repo.name));
+  const languages = ['Todos', ...new Set(repos.map(r => r.language).filter(Boolean))];
 
-  const languages = ['Todos', ...new Set(otherRepos.map(repo => repo.language).filter(Boolean))];
-
-  const filteredOtherRepos = otherRepos.filter(repo => {
-    const matchesSearch = repo.name.toLowerCase().includes(searchTerm.toLowerCase()) || 
-                          repo.explanation.toLowerCase().includes(searchTerm.toLowerCase());
+  const filteredRepos = repos.filter(repo => {
+    const matchesSearch = repo.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                          (repo.description && repo.description.toLowerCase().includes(searchTerm.toLowerCase()));
     const matchesLang = selectedLanguage === 'Todos' || repo.language === selectedLanguage;
     return matchesSearch && matchesLang;
   });
 
   return (
-    <section id="projects" className="py-20 bg-[#0a0a0a] relative overflow-hidden">
-      {/* Background Glow */}
-      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] bg-emerald-500/5 rounded-full blur-[120px] pointer-events-none"></div>
+    <section id="projects" className="py-24 bg-[#0A0A0F] relative overflow-hidden">
+      {/* Background Lighting */}
+      <div className="absolute top-1/4 -right-40 w-96 h-96 bg-emerald-500/5 rounded-full blur-[140px] pointer-events-none"></div>
+      <div className="absolute bottom-1/4 -left-40 w-96 h-96 bg-champagne-500/5 rounded-full blur-[140px] pointer-events-none"></div>
 
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-        <div className={`transition-all duration-1000 transform ${isVisible ? 'translate-y-0 opacity-100' : 'translate-y-10 opacity-0'}`}>
-          <div className="mb-16 text-center">
-            <h2 className="text-5xl md:text-6xl font-bold mb-4 tracking-tighter">
-              Meus <span className="text-emerald-500 font-massive-serif">Projetos</span>
-            </h2>
-            <p className="text-xl text-gray-500 font-light max-w-2xl mx-auto">
-              Sincronização dinâmica com trechos dos arquivos <span className="text-white font-medium">README.md</span>.
-            </p>
+      <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+        
+        {/* Section Header */}
+        <div className="max-w-3xl mb-12 space-y-3">
+          <div className="inline-flex items-center gap-2 px-3.5 py-1 rounded-full bg-white/[0.03] border border-white/10 text-gray-300 text-xs font-mono">
+            <span className="w-1.5 h-1.5 rounded-full bg-emerald-400"></span>
+            <span>Portfólio & Engenharia de Sistemas</span>
           </div>
 
-          {loading ? (
-            <div className="flex justify-center items-center py-20">
-              <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-emerald-500"></div>
-            </div>
-          ) : error ? (
-            <div className="text-center py-20 bg-red-500/5 border border-red-500/20 rounded-3xl">
-              <p className="text-red-400 font-medium">Ops! {error}</p>
-              <button 
-                onClick={() => window.location.reload()}
-                className="mt-4 text-emerald-500 hover:text-emerald-400 underline"
+          <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold tracking-tight text-white">
+            Projetos Pessoais & <br />
+            <span className="font-massive-serif text-emerald-400 font-normal">Sistemas Corporativos</span>
+          </h2>
+
+          <p className="text-base text-gray-400 font-light leading-relaxed">
+            Aplicações desenvolvidas para web, soluções com inteligência artificial e sistemas de missão crítica integrados a ERPs empresariais.
+          </p>
+        </div>
+
+        {/* Tab Selector */}
+        <div className="flex items-center gap-2 mb-10 pb-4 border-b border-white/10">
+          <button
+            onClick={() => setActiveTab('personal')}
+            className={`px-5 py-2.5 rounded-xl text-xs font-mono uppercase tracking-wider transition-all duration-200 border ${
+              activeTab === 'personal'
+                ? 'bg-emerald-500 text-black border-emerald-500 font-bold shadow-[0_0_15px_rgba(16,185,129,0.2)]'
+                : 'bg-white/[0.02] border-white/5 text-gray-400 hover:text-white hover:border-white/10'
+            }`}
+          >
+            Projetos Pessoais & Clientes ({PERSONAL_PROJECTS.length})
+          </button>
+
+          <button
+            onClick={() => setActiveTab('enterprise')}
+            className={`px-5 py-2.5 rounded-xl text-xs font-mono uppercase tracking-wider transition-all duration-200 border ${
+              activeTab === 'enterprise'
+                ? 'bg-emerald-500 text-black border-emerald-500 font-bold shadow-[0_0_15px_rgba(16,185,129,0.2)]'
+                : 'bg-white/[0.02] border-white/5 text-gray-400 hover:text-white hover:border-white/10'
+            }`}
+          >
+            Sistemas Corporativos & ERP Senior ({ENTERPRISE_SYSTEMS.length})
+          </button>
+        </div>
+
+        {/* TAB 1: PROJETOS PESSOAIS */}
+        {activeTab === 'personal' && (
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-7 mb-20">
+            {PERSONAL_PROJECTS.map((proj) => (
+              <div
+                key={proj.id}
+                className="rounded-2xl bg-[#12121D]/80 backdrop-blur-xl border border-white/10 p-7 flex flex-col justify-between hover:border-emerald-500/30 transition-all duration-300 hover:shadow-[0_15px_30px_rgba(0,0,0,0.5)] group"
               >
-                Tentar novamente
-              </button>
-            </div>
-          ) : (
-            <>
-              {/* Projetos em Destaque */}
-              {featuredRepos.length > 0 && (
-                <div className="mb-24">
-                  <h3 className="text-2xl font-bold mb-8 text-gray-300 flex items-center gap-3">
-                    <span className="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-pulse"></span>
-                    Destaques
-                  </h3>
-                  <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-                    {featuredRepos.map((repo, index) => {
-                      const deployUrl = DEPLOY_LINKS[repo.name] || repo.homepage;
-                      return (
-                        <div 
-                          key={repo.id}
-                          className="group relative bg-[#111]/40 border border-white/5 p-8 rounded-[2rem] hover:border-emerald-500/30 transition-all duration-500 hover:scale-[1.02] flex flex-col justify-between"
-                          style={{ transitionDelay: `${index * 100}ms` }}
-                        >
-                          <div className="absolute top-0 right-0 w-24 h-24 bg-emerald-500/5 rounded-bl-full group-hover:bg-emerald-500/10 transition-colors pointer-events-none"></div>
+                <div className="space-y-4">
+                  <div className="flex items-center justify-between gap-2">
+                    <span className="text-xs font-mono text-emerald-400 font-medium">
+                      {proj.category}
+                    </span>
+                    <span className="text-[11px] font-mono px-2.5 py-0.5 rounded-full bg-white/5 border border-white/10 text-gray-300">
+                      {proj.badge}
+                    </span>
+                  </div>
 
-                          <div>
-                            <div className="flex justify-between items-start mb-6">
-                              <span className="px-3.5 py-1 text-xs font-bold tracking-widest uppercase bg-white/5 text-gray-400 rounded-full border border-white/5 group-hover:bg-emerald-500 group-hover:text-black transition-colors duration-500">
-                                {repo.language || 'Markdown'}
-                              </span>
-                              <span className="text-gray-600 text-xs font-mono">#{index + 1}</span>
-                            </div>
+                  <div>
+                    <h3 className="text-2xl font-bold text-white group-hover:text-emerald-300 transition-colors tracking-tight">
+                      {proj.title}
+                    </h3>
+                    <p className="text-sm text-gray-300 font-light leading-relaxed mt-2.5">
+                      {proj.description}
+                    </p>
+                  </div>
 
-                            <h4 className="text-2xl font-bold text-white mb-3 group-hover:text-emerald-500 transition-colors uppercase tracking-tight">
-                              {repo.name}
-                            </h4>
-
-                            <p className="text-gray-400 text-sm font-light leading-relaxed mb-8 italic">
-                              "{repo.explanation}"
-                            </p>
-                          </div>
-
-                          <div className="flex gap-4 border-t border-white/5 pt-6 mt-auto">
-                            <a 
-                              href={repo.html_url}
-                              target="_blank"
-                              rel="noopener noreferrer"
-                              className="flex-1 inline-flex items-center justify-center gap-2 px-4 py-3 rounded-xl bg-white/5 border border-white/5 hover:border-white/20 text-white font-bold text-sm tracking-widest uppercase transition-all"
-                            >
-                              <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" fill="currentColor" viewBox="0 0 24 24">
-                                <path d="M12 .297c-6.63 0-12 5.373-12 12 0 5.303 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61C4.422 18.07 3.633 17.7 3.633 17.7c-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 22.092 24 17.592 24 12.297c0-6.627-5.373-12-12-12"/>
-                              </svg>
-                              Código
-                            </a>
-                            {deployUrl && (
-                              <a 
-                                href={deployUrl}
-                                target="_blank"
-                                rel="noopener noreferrer"
-                                className="flex-1 inline-flex items-center justify-center gap-2 px-4 py-3 rounded-xl bg-emerald-500 hover:bg-emerald-600 text-black font-bold text-sm tracking-widest uppercase transition-all shadow-[0_0_20px_rgba(16,185,129,0.15)]"
-                              >
-                                <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
-                                </svg>
-                                Demo
-                              </a>
-                            )}
-                          </div>
-                        </div>
-                      );
-                    })}
+                  <div className="flex flex-wrap gap-2 pt-1">
+                    {proj.techStack.map((tech, tIdx) => (
+                      <span
+                        key={tIdx}
+                        className="text-[11px] font-mono px-2.5 py-0.5 rounded bg-black/40 border border-white/5 text-gray-300"
+                      >
+                        {tech}
+                      </span>
+                    ))}
                   </div>
                 </div>
-              )}
 
-              {/* Outros Projetos */}
-              <div className="mb-6 flex flex-col md:flex-row md:items-center justify-between gap-6">
-                <h3 className="text-2xl font-bold text-gray-300 flex items-center gap-3">
-                  <span className="w-2 h-2 rounded-full bg-emerald-500/40"></span>
-                  Outros Repositórios
-                </h3>
-                
-                <div className="flex items-center gap-4">
-                  <div className="relative">
-                    <input 
-                      type="text"
-                      placeholder="Buscar repositório..."
-                      value={searchTerm}
-                      onChange={(e) => setSearchTerm(e.target.value)}
-                      className="w-full sm:w-64 pl-12 pr-4 py-3 bg-white/5 border border-white/5 rounded-2xl focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-transparent text-white placeholder:text-gray-600 text-sm font-medium transition-all"
-                    />
-                    <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-gray-600 absolute left-4 top-1/2 -translate-y-1/2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
-                    </svg>
-                  </div>
+                <div className="flex items-center gap-3 pt-6 mt-6 border-t border-white/5">
+                  {proj.demoUrl && (
+                    <a
+                      href={proj.demoUrl}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="flex-1 py-2.5 px-4 rounded-xl bg-emerald-500 hover:bg-emerald-400 text-black font-bold text-xs uppercase tracking-wider transition-colors text-center flex items-center justify-center gap-2"
+                    >
+                      <span>Acessar Demo</span>
+                      <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
+                      </svg>
+                    </a>
+                  )}
+
+                  <a
+                    href={proj.githubUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="py-2.5 px-4 rounded-xl bg-white/5 hover:bg-white/10 border border-white/10 text-white font-medium text-xs font-mono uppercase tracking-wider transition-colors flex items-center gap-2"
+                  >
+                    <span>Repositório</span>
+                  </a>
                 </div>
               </div>
+            ))}
+          </div>
+        )}
 
-              {/* Filtros de Linguagem */}
-              {languages.length > 1 && (
-                <div className="flex flex-wrap gap-2 mb-8">
-                  {languages.map((lang) => (
-                    <button
-                      key={lang}
-                      onClick={() => setSelectedLanguage(lang)}
-                      className={`px-5 py-2.5 rounded-full text-xs font-bold tracking-widest uppercase transition-all duration-300 border ${
-                        selectedLanguage === lang 
-                          ? 'bg-emerald-500 text-black border-emerald-500 shadow-[0_0_15px_rgba(16,185,129,0.2)]' 
-                          : 'bg-white/5 text-gray-400 border-white/5 hover:border-white/10 hover:text-white'
-                      }`}
-                    >
-                      {lang}
-                    </button>
-                  ))}
-                </div>
-              )}
+        {/* TAB 2: SISTEMAS CORPORATIVOS & ERP (COFRE - SEM EXPOR EMPRESA) */}
+        {activeTab === 'enterprise' && (
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-7 mb-20">
+            {ENTERPRISE_SYSTEMS.map((sys) => (
+              <div
+                key={sys.id}
+                className="rounded-2xl bg-[#12121D]/80 backdrop-blur-xl border border-white/10 p-7 flex flex-col justify-between hover:border-emerald-500/30 transition-all duration-300 hover:shadow-[0_15px_30px_rgba(0,0,0,0.5)] group"
+              >
+                <div className="space-y-4">
+                  <div className="flex items-center justify-between gap-2">
+                    <span className="text-xs font-mono text-emerald-400 font-bold px-2 py-0.5 rounded bg-emerald-500/10 border border-emerald-500/20">
+                      {sys.code}
+                    </span>
+                    <span className="text-[11px] font-mono text-gray-400">
+                      {sys.badge}
+                    </span>
+                  </div>
 
-              {filteredOtherRepos.length === 0 ? (
-                <div className="text-center py-20 bg-[#111]/30 border border-white/5 rounded-[2rem] mb-12">
-                  <p className="text-gray-500 font-medium">Nenhum repositório corresponde aos filtros.</p>
+                  <div>
+                    <h3 className="text-xl font-bold text-white group-hover:text-emerald-300 transition-colors tracking-tight">
+                      {sys.title}
+                    </h3>
+                    <p className="text-xs text-gray-400 font-mono mt-0.5">
+                      {sys.category}
+                    </p>
+                    <p className="text-xs sm:text-sm text-gray-300 font-light leading-relaxed mt-3">
+                      {sys.summary}
+                    </p>
+                  </div>
+
+                  {/* Highlights */}
+                  <div className="space-y-2 pt-2">
+                    {sys.highlights.map((item, hIdx) => (
+                      <div key={hIdx} className="flex items-start gap-2 text-xs text-gray-400 font-light leading-relaxed">
+                        <span className="text-emerald-400 font-bold mt-0.5">•</span>
+                        <span>{item}</span>
+                      </div>
+                    ))}
+                  </div>
+
+                  {/* Stack */}
+                  <div className="flex flex-wrap gap-1.5 pt-3">
+                    {sys.techStack.map((tech, tIdx) => (
+                      <span
+                        key={tIdx}
+                        className="text-[10px] font-mono px-2 py-0.5 rounded bg-black/40 border border-white/5 text-gray-300"
+                      >
+                        {tech}
+                      </span>
+                    ))}
+                  </div>
                 </div>
-              ) : (
-                <div className="overflow-x-auto rounded-[2rem] border border-white/5 bg-[#111]/50 backdrop-blur-sm">
-                  <table className="w-full text-left border-collapse">
-                    <thead>
-                      <tr className="border-b border-white/5 bg-white/5 text-gray-400 text-sm font-bold tracking-[0.2em] uppercase">
-                        <th className="px-8 py-6">Projeto / Descrição</th>
-                        <th className="px-8 py-6 text-center">Linguagem</th>
-                        <th className="px-8 py-6 text-right">Ação</th>
-                      </tr>
-                    </thead>
-                    <tbody className="divide-y divide-white/5">
-                      {filteredOtherRepos.map((repo, index) => {
-                        const deployUrl = DEPLOY_LINKS[repo.name] || repo.homepage;
-                        return (
-                          <tr 
-                            key={repo.id}
-                            className="group hover:bg-white/5 transition-all duration-300"
-                            style={{ transitionDelay: `${index * 50}ms` }}
-                          >
-                            <td className="px-8 py-6">
-                              <div className="flex flex-col gap-2">
-                                <span className="text-white font-bold text-lg group-hover:text-emerald-500 transition-colors uppercase tracking-tight">
-                                  {repo.name}
-                                </span>
-                                <span className="text-gray-400 text-sm font-light leading-relaxed max-w-2xl italic">
-                                  "{repo.explanation}"
-                                </span>
-                              </div>
-                            </td>
-                            <td className="px-8 py-6">
-                              <div className="flex justify-center items-center gap-2 text-gray-300 font-medium">
-                                <span className="w-2.5 h-2.5 rounded-full bg-emerald-500"></span>
-                                <span>{repo.language || 'Markdown'}</span>
-                              </div>
-                            </td>
-                            <td className="px-8 py-6 text-right">
-                              <div className="flex justify-end gap-3">
-                                {/* Botão GitHub */}
-                                <a 
-                                  href={repo.html_url}
-                                  target="_blank"
-                                  rel="noopener noreferrer"
-                                  className="inline-flex items-center justify-center w-12 h-12 rounded-full bg-white/5 border border-white/5 hover:border-emerald-500/50 hover:bg-emerald-500 transition-all group/btn"
-                                  title="Ver código no GitHub"
-                                >
-                                  <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-gray-400 group-hover/btn:text-black" fill="currentColor" viewBox="0 0 24 24">
-                                    <path d="M12 .297c-6.63 0-12 5.373-12 12 0 5.303 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61C4.422 18.07 3.633 17.7 3.633 17.7c-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 22.092 24 17.592 24 12.297c0-6.627-5.373-12-12-12"/>
-                                  </svg>
-                                </a>
-                                
-                                {/* Botão de Link Externo (Deploy) */}
-                                {deployUrl && (
-                                  <a 
-                                    href={deployUrl}
-                                    target="_blank"
-                                    rel="noopener noreferrer"
-                                    className="inline-flex items-center justify-center w-12 h-12 rounded-full bg-emerald-500/10 border border-emerald-500/20 hover:border-emerald-500 hover:bg-emerald-500 transition-all group/btn"
-                                    title="Acessar site hospedado"
-                                  >
-                                    <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-emerald-400 group-hover/btn:text-black" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
-                                    </svg>
-                                  </a>
-                                )}
-                              </div>
-                            </td>
-                          </tr>
-                        );
-                      })}
-                    </tbody>
-                  </table>
+
+                <div className="pt-6 mt-6 border-t border-white/5 flex items-center justify-between text-xs font-mono text-gray-400">
+                  <span>Integração ERP Senior</span>
+                  <span className="text-emerald-400">{sys.statusLabel}</span>
                 </div>
-              )}
-            </>
+              </div>
+            ))}
+          </div>
+        )}
+
+        {/* EXPLORADOR DE REPOSITÓRIOS DO GITHUB */}
+        <div className="pt-8">
+          <div className="flex flex-col md:flex-row md:items-end justify-between gap-4 mb-8 pb-4 border-b border-white/10">
+            <div>
+              <h3 className="text-xl font-bold text-white tracking-tight">
+                Repositórios Públicos no GitHub
+              </h3>
+              <p className="text-xs text-gray-400 font-light mt-0.5">
+                Projetos abertos, utilitários e experimentos sincronizados em tempo real
+              </p>
+            </div>
+
+            <div className="relative w-full sm:w-72">
+              <input
+                type="text"
+                placeholder="Filtrar por nome ou tecnologia..."
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+                className="w-full pl-9 pr-4 py-2 rounded-xl bg-white/[0.03] border border-white/10 text-white placeholder-gray-500 text-xs font-mono focus:outline-none focus:border-emerald-500 transition-colors"
+              />
+              <svg className="w-3.5 h-3.5 text-gray-400 absolute left-3 top-1/2 -translate-y-1/2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+              </svg>
+            </div>
+          </div>
+
+          {languages.length > 1 && (
+            <div className="flex flex-wrap gap-2 mb-8">
+              {languages.map((lang) => (
+                <button
+                  key={lang}
+                  onClick={() => setSelectedLanguage(lang)}
+                  className={`px-3 py-1 rounded-lg text-xs font-mono transition-colors border ${
+                    selectedLanguage === lang
+                      ? 'bg-emerald-500 text-black border-emerald-500 font-bold'
+                      : 'bg-white/[0.02] text-gray-400 border-white/5 hover:border-white/10 hover:text-white'
+                  }`}
+                >
+                  {lang}
+                </button>
+              ))}
+            </div>
           )}
-          
-          <div className="mt-12 text-center">
-            <a 
+
+          {loadingRepos ? (
+            <div className="flex justify-center items-center py-16">
+              <div className="w-8 h-8 rounded-full border-2 border-emerald-500/20 border-t-emerald-500 animate-spin"></div>
+            </div>
+          ) : filteredRepos.length === 0 ? (
+            <div className="text-center py-12 rounded-xl bg-white/[0.02] border border-white/5 text-gray-400 text-xs font-mono">
+              Nenhum repositório encontrado para o filtro.
+            </div>
+          ) : (
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
+              {filteredRepos.slice(0, 9).map((repo) => (
+                <div
+                  key={repo.id}
+                  className="rounded-xl bg-[#12121D]/60 border border-white/5 p-5 hover:border-emerald-500/30 transition-all flex flex-col justify-between group"
+                >
+                  <div>
+                    <div className="flex items-center justify-between gap-2 mb-2">
+                      <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-white/5 text-emerald-400 border border-white/5">
+                        {repo.language || 'Geral'}
+                      </span>
+                      {repo.stargazers_count > 0 && (
+                        <span className="text-xs font-mono text-amber-400 flex items-center gap-1">
+                          <svg className="w-3 h-3" fill="currentColor" viewBox="0 0 20 20">
+                            <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/>
+                          </svg>
+                          {repo.stargazers_count}
+                        </span>
+                      )}
+                    </div>
+
+                    <h4 className="text-base font-bold text-white group-hover:text-emerald-400 transition-colors tracking-tight">
+                      {repo.name}
+                    </h4>
+
+                    <p className="text-xs text-gray-400 font-light leading-relaxed mt-2 line-clamp-3">
+                      {repo.cleanDesc}
+                    </p>
+                  </div>
+
+                  <div className="flex items-center gap-2 pt-4 mt-4 border-t border-white/5 text-xs font-mono">
+                    <a
+                      href={repo.html_url}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="flex-1 py-1.5 px-3 rounded bg-white/5 hover:bg-white/10 text-white text-center transition-colors"
+                    >
+                      Código
+                    </a>
+                    {repo.customDeploy && (
+                      <a
+                        href={repo.customDeploy}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="py-1.5 px-3 rounded bg-emerald-500/10 hover:bg-emerald-500/20 border border-emerald-500/30 text-emerald-400 text-center transition-colors"
+                      >
+                        Demo
+                      </a>
+                    )}
+                  </div>
+                </div>
+              ))}
+            </div>
+          )}
+
+          <div className="mt-10 text-center">
+            <a
               href="https://github.com/Popilynx?tab=repositories"
               target="_blank"
               rel="noopener noreferrer"
-              className="group inline-flex items-center gap-2 text-gray-400 hover:text-emerald-500 transition-all font-bold tracking-[0.3em] uppercase text-xs"
+              className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full bg-white/[0.03] hover:bg-white/[0.08] border border-white/10 text-xs font-mono text-gray-300 hover:text-white uppercase tracking-wider transition-all"
             >
-              Explorar Repositórios Completos
-              <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 transform transition-transform group-hover:translate-x-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M17 8l4 4m0 0l-4 4m4-4H3" />
+              <span>Ver todos os repositórios no GitHub</span>
+              <svg className="w-3.5 h-3.5 text-emerald-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14 5l7 7m0 0l-7 7m7-7H3" />
               </svg>
             </a>
           </div>
         </div>
+
       </div>
     </section>
   );

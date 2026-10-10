@@ -4,21 +4,23 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="theme-color" content="#0A0A0F" />
+  <meta name="description" content="Renato Rocha — Desenvolvedor Full Stack, Criador de Produtos e Engenheiro de Software." />
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link
-    href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&family=Playfair+Display:ital,wght@1,900&display=swap"
+    href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;500;600;700&family=Outfit:wght@300;400;500;600;700;800&family=Playfair+Display:ital,wght@0,600;0,700;0,900;1,400;1,600;1,700;1,900&display=swap"
     rel="stylesheet">
   <link rel="icon" type="image/png" href="/favicon.png" />
-  <title>Renato Rocha - Portfolio</title>
+  <title>Renato Rocha — Full Stack Engineer & Maker</title>
 </head>
 
-<body>
+<body class="bg-[#0A0A0F] text-slate-100 antialiased selection:bg-emerald-500 selection:text-black">
   <div id="root"></div>
-  <!-- SVG Noise Filter -->
+  <!-- SVG Noise Filter (Subtle Analog Texture) -->
   <svg style="position: fixed; top: 0; left: 0; width: 0; height: 0; pointer-events: none; opacity: 0; z-index: -1;">
     <filter id="noiseFilter">
-      <feTurbulence type="fractalNoise" baseFrequency="0.6" numOctaves="3" stitchTiles="stitch" />
+      <feTurbulence type="fractalNoise" baseFrequency="0.65" numOctaves="3" stitchTiles="stitch" />
     </filter>
   </svg>
   <script type="module" src="/src/main.jsx"></script>

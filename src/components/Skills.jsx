@@ -1,120 +1,135 @@
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
+
+const TECH_DOMAINS = [
+  {
+    id: 'frontend',
+    label: 'Frontend',
+    skills: [
+      { name: 'Vue.js (Vue 3 / Options & Composition API)', role: 'SPAs reativas, Pinia, ecossistemas com PrimeVue e design systems próprios.', badge: 'Core' },
+      { name: 'React.js', role: 'Componentização moderna, hooks, gerenciamento de estado e Next.js.', badge: 'Core' },
+      { name: 'TypeScript & JavaScript', role: 'Tipagem estrita, manipulação assíncrona e padrões ESNext.', badge: 'Avançado' },
+      { name: 'Tailwind CSS', role: 'Estilização utilitária, responsividade e componentização modular.', badge: 'Avançado' },
+      { name: 'Vite & Webpack', role: 'Tooling de build, bundling otimizado e configurações de ambiente.', badge: 'Tooling' }
+    ]
+  },
+  {
+    id: 'backend',
+    label: 'Backend & APIs',
+    skills: [
+      { name: 'Java & Spring Boot', role: 'Microsserviços, Spring Data JPA, Spring Security, arquitetura em camadas e DTOs.', badge: 'Core' },
+      { name: 'Node.js & Express', role: 'APIs assíncronas, integrações ágeis e serviços de automação.', badge: 'Produção' },
+      { name: 'Python & FastAPI', role: 'Microserviços rápidos de dados, dashboards de PCP e agentes de automação.', badge: 'Produção' },
+      { name: 'WebServices SOAP & RESTful', role: 'Barramentos XML, contratos WSDL/XSD, endpoints REST e JSON schema.', badge: 'Integrações' },
+      { name: 'Segurança & Autenticação', role: 'Tokens JWT, autenticação stateless, RBAC e validação de alçadas.', badge: 'Segurança' }
+    ]
+  },
+  {
+    id: 'erp',
+    label: 'ERP & Sistemas Corporativos',
+    skills: [
+      { name: 'ERP Senior Sistemas (Gestão Empresarial G5 / Sapiens)', role: 'Módulos de Compras, Almoxarifado, Manufatura/PCP, tabelas nativas E0/E1/E2/E7 e integrações.', badge: 'Especialista' },
+      { name: 'LSP (Linguagem Senior de Programação)', role: 'Desenvolvimento e manutenção de regras de negócio, identificadores de regras e modelos.', badge: 'Linguagem ERP' },
+      { name: 'Validação de Sistemas Computadorizados (ANVISA / BPF)', role: 'Conformidade com protocolos de qualificação (IQ, OQ, PQ) e rastreabilidade fabril.', badge: 'Regulatório' },
+      { name: 'SGI & Gerador de Relatórios', role: 'Customização de telas e geração de relatórios corporativos de gestão.', badge: 'Ferramentas' }
+    ]
+  },
+  {
+    id: 'database',
+    label: 'Bancos de Dados',
+    skills: [
+      { name: 'Oracle Database', role: 'Trabalho contínuo com dialetos de grande porte, views, otimização de queries e triggers.', badge: 'Enterprise' },
+      { name: 'SQL Server', role: 'Modelagem, procedures, manutenção de dados industriais e índices.', badge: 'Enterprise' },
+      { name: 'PostgreSQL & MySQL', role: 'Bancos relacionais para produtos web, SaaS e serviços transacionais.', badge: 'Relacional' },
+      { name: 'Modelagem de Dados & ODS', role: 'Estruturação de esquemas operacionais e consolidação de dados transacionais.', badge: 'Arquitetura' }
+    ]
+  },
+  {
+    id: 'devops',
+    label: 'DevOps & Observabilidade',
+    skills: [
+      { name: 'Docker & Containers', role: 'Empacotamento de serviços, isolamento de dependências e padronização de ambientes.', badge: 'DevOps' },
+      { name: 'Datadog & APM', role: 'Monitoramento ativo e passivo, rastreamento de requisições, métricas e healthchecks.', badge: 'Monitoramento' },
+      { name: 'Git / GitHub / BitBucket', role: 'Versionamento colaborativo, controle de branches e fluxo de PRs.', badge: 'Versionamento' },
+      { name: 'Servidores Linux & Windows', role: 'Configuração de serviços systemd, permissões, ambientes EC2 e redes.', badge: 'Infraestrutura' }
+    ]
+  }
+];
 
 function Skills() {
-  const [isVisible, setIsVisible] = useState(false);
+  const [activeTab, setActiveTab] = useState('erp');
 
-  useEffect(() => {
-    const observer = new IntersectionObserver(
-      ([entry]) => {
-        if (entry.isIntersecting) {
-          setIsVisible(true);
-        }
-      },
-      { threshold: 0.1 }
-    );
-
-    const element = document.getElementById('skills');
-    if (element) {
-      observer.observe(element);
-    }
-
-    return () => {
-      if (element) {
-        observer.unobserve(element);
-      }
-    };
-  }, []);
-
-  const skills = [
-    {
-      category: "Frontend",
-      items: [
-        { name: "React.js", level: 90 },
-        { name: "Vue.js", level: 85 },
-        { name: "React Native", level: 80 },
-        { name: "Flutter", level: 75 },
-        { name: "HTML/CSS", level: 95 },
-        { name: "JavaScript", level: 90 },
-      ]
-    },
-    {
-      category: "Backend",
-      items: [
-        { name: "Java Spring Boot", level: 85 },
-        { name: "Python", level: 80 },
-        { name: "Node.js", level: 75 },
-        { name: "APIs REST", level: 90 },
-        { name: "Bancos SQL", level: 85 },
-        { name: "Bancos NoSQL", level: 75 },
-      ]
-    },
-    {
-      category: "Ferramentas & Outros",
-      items: [
-        { name: "Git", level: 90 },
-        { name: "Docker", level: 75 },
-        { name: "CI/CD", level: 70 },
-        { name: "Ágil/Scrum", level: 80 },
-        { name: "Testes", level: 75 },
-        { name: "Design UI/UX", level: 65 },
-      ]
-    }
-  ];
+  const currentDomain = TECH_DOMAINS.find(d => d.id === activeTab) || TECH_DOMAINS[0];
 
   return (
-    <section id="skills" className="py-20 bg-[#0a0a0a]">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className={`transition-all duration-1000 transform ${isVisible ? 'translate-y-0 opacity-100' : 'translate-y-10 opacity-0'}`}>
-          <h2 className="text-5xl md:text-6xl font-bold text-center mb-4 tracking-tighter">
-            Minhas <span className="text-emerald-500 font-massive-serif">Habilidades</span>
+    <section id="skills" className="py-24 bg-[#0A0A0F] relative overflow-hidden">
+      <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+        
+        {/* Section Header */}
+        <div className="max-w-3xl mb-12 space-y-3">
+          <div className="inline-flex items-center gap-2 px-3.5 py-1 rounded-full bg-white/[0.03] border border-white/10 text-gray-300 text-xs font-mono">
+            <span className="w-1.5 h-1.5 rounded-full bg-emerald-400"></span>
+            <span>Competências & Tecnologias</span>
+          </div>
+
+          <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold tracking-tight text-white">
+            Stack Técnica & <br />
+            <span className="font-massive-serif text-emerald-400 font-normal">Domínios de Atuação</span>
           </h2>
-          <p className="text-xl text-gray-500 text-center mb-16 font-light">Expertise e tecnologias com as quais trabalho</p>
 
-          <div className="grid md:grid-cols-3 gap-8">
-            {skills.map((skillCategory, categoryIndex) => (
-              <div
-                key={categoryIndex}
-                className={`bg-[#111] border border-white/5 rounded-3xl p-8 transition-all duration-700 transform ${isVisible ? 'translate-y-0 opacity-100' : 'translate-y-10 opacity-0'} hover:border-emerald-500/20`}
-                style={{ transitionDelay: `${categoryIndex * 200}ms` }}
-              >
-                <h3 className="text-sm font-bold text-emerald-500 tracking-widest uppercase mb-10 text-center">
-                  {skillCategory.category}
-                </h3>
-                <div className="space-y-8">
-                  {skillCategory.items.map((skill, skillIndex) => (
-                    <div key={skillIndex} className="space-y-3">
-                      <div className="flex justify-between items-end">
-                        <span className="text-lg font-medium text-white">{skill.name}</span>
-                        <span className="text-sm font-bold text-gray-500 tracking-tighter">{skill.level}%</span>
-                      </div>
-                      <div className="w-full bg-white/5 rounded-full h-1.5 overflow-hidden">
-                        <div
-                          className="bg-emerald-500 h-full rounded-full transition-all duration-[1.5s] ease-out"
-                          style={{
-                            width: isVisible ? `${skill.level}%` : '0%',
-                            transitionDelay: `${(categoryIndex * 200) + (skillIndex * 100)}ms`
-                          }}
-                        ></div>
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              </div>
-            ))}
-          </div>
-
-          <div className="mt-20 flex flex-wrap justify-center gap-4">
-            {['Java', 'Spring Boot', 'React', 'Vue.js', 'Flutter', 'Python', 'JavaScript', 'Git'].map((tech, index) => (
-              <div
-                key={index}
-                className={`bg-white/5 border border-white/5 rounded-full px-8 py-4 text-center transition-all duration-500 transform hover:scale-105 hover:bg-emerald-500 hover:text-black ${isVisible ? 'translate-y-0 opacity-100' : 'translate-y-10 opacity-0'}`}
-                style={{ transitionDelay: `${index * 100}ms` }}
-              >
-                <span className="text-lg font-bold tracking-tight">{tech}</span>
-              </div>
-            ))}
-          </div>
+          <p className="text-base text-gray-400 font-light leading-relaxed">
+            Conhecimento prático aplicado no dia a dia em projetos web, automações e arquiteturas corporativas de missão crítica.
+          </p>
         </div>
+
+        {/* Tab Buttons */}
+        <div className="flex flex-wrap gap-2 mb-10 pb-4 border-b border-white/10">
+          {TECH_DOMAINS.map((domain) => {
+            const isActive = activeTab === domain.id;
+            return (
+              <button
+                key={domain.id}
+                onClick={() => setActiveTab(domain.id)}
+                className={`px-4 py-2.5 rounded-xl text-xs font-mono uppercase tracking-wider transition-all duration-200 border ${
+                  isActive
+                    ? 'bg-emerald-500 text-black border-emerald-500 font-bold shadow-[0_0_15px_rgba(16,185,129,0.2)]'
+                    : 'bg-white/[0.02] border-white/5 text-gray-400 hover:text-white hover:border-white/10'
+                }`}
+              >
+                {domain.label}
+              </button>
+            );
+          })}
+        </div>
+
+        {/* Skills Cards Grid */}
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+          {currentDomain.skills.map((skill, index) => (
+            <div
+              key={index}
+              className="p-6 rounded-2xl bg-[#12121D]/70 border border-white/10 hover:border-emerald-500/30 transition-all duration-200 group flex flex-col justify-between"
+            >
+              <div className="space-y-2.5">
+                <div className="flex items-start justify-between gap-3">
+                  <h3 className="text-base font-bold text-white group-hover:text-emerald-300 transition-colors tracking-tight">
+                    {skill.name}
+                  </h3>
+                  <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-white/5 border border-white/10 text-emerald-400 whitespace-nowrap">
+                    {skill.badge}
+                  </span>
+                </div>
+                <p className="text-xs sm:text-sm text-gray-300 font-light leading-relaxed">
+                  {skill.role}
+                </p>
+              </div>
+
+              <div className="pt-4 mt-4 border-t border-white/5 flex items-center justify-between text-[11px] font-mono text-gray-400">
+                <span>Aplicado em produção</span>
+                <span className="text-emerald-400 font-medium">Experiência prática</span>
+              </div>
+            </div>
+          ))}
+        </div>
+
       </div>
     </section>
   );
